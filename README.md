@@ -1,1 +1,1 @@
-# rxjs
+# collection of rx js
