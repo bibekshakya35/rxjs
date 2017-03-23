@@ -54,6 +54,10 @@
 
 	var _arrayapp2 = _interopRequireDefault(_arrayapp);
 
+	var _observer_pattern = __webpack_require__(349);
+
+	var _observer_pattern2 = _interopRequireDefault(_observer_pattern);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
@@ -99,6 +103,9 @@
 	moveStream$.subscribe(function (e) {
 	    output.html('<h1>X' + e.clientX + ' y ' + e.clientY + '</h1>');
 	}, function (err) {}, function () {});
+	document.body.addEventListener('mousemove', function (e) {
+	    console.log(e.clientX, e.clientY);
+	});
 
 /***/ },
 /* 2 */
@@ -30277,6 +30284,78 @@
 	}, function (complete) {
 	    console.log('complete');
 	});
+
+	// var clicks = 0;
+	// document.addEventListener('click',function registerClicks(e){
+	//     if(clicks<10){
+	//         console.log("inside click");
+	//         if(e.clientX > window.innerWidth/2){
+	//             clicks+=1;
+	//             console.log("inside click"+clicks);
+	//         }
+	//     }
+	//     else{
+	//         document.removeEventListener('click',registerClicks);
+	//     }
+	// });
+
+	_Rx2.default.Observable.fromEvent(document, 'click').filter(function (c) {
+	    return c.clientX > window.innerWidth / 2;
+	}).take(10).subscribe(function (c) {
+	    console.log("this is " + c.clientX, c.clientY);
+	});
+
+/***/ },
+/* 349 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function Producer() {
+	    this.listeners = [];
+	}
+	Producer.prototype.add = function (listener) {
+	    this.listeners.push(listener);
+	};
+	Producer.prototype.remove = function (listener) {
+	    var index = this.listeners.indexOf(listener);
+	    this.listeners.slice(index, 1);
+	};
+	Producer.prototype.notify = function (message) {
+	    this.listeners.forEach(function (listener) {
+	        return listener.update(message);
+	    });
+	};
+
+	var listener1 = {
+	    update: function update(message) {
+	        return console.log("Listener 1 received", message);
+	    }
+	};
+	var listener2 = {
+	    update: function update(message) {
+	        return console.log("Listner 2 recieved", message);
+	    }
+	};
+	var notifier = new Producer();
+	notifier.add(listener1);
+	notifier.add(listener2);
+	notifier.notify('Hello There');
+
+	function Person(first, last, age, eyecolor) {
+	    this.firstName = first;
+	    this.lastName = last;
+	    this.age = age;
+	    this.eyecolor = eyecolor;
+	}
+
+	var bibek = new Person("Bibek", "Shakya", 57, "blue");
+	bibek.nationality = "English";
+	console.log(bibek.nationality);
+	bibek.name = function () {
+	    return this.firstName + " " + this.lastName;
+	};
+	console.log(bibek.name());
 
 /***/ }
 /******/ ]);
